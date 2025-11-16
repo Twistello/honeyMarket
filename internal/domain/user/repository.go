@@ -89,13 +89,13 @@ func (r *Repository) GetByEmail(ctx context.Context, email string) (*User, error
 	defer conn.Release()
 
 	query := `
-		SELECT email, password_hash, role, created_at
+		SELECT id, email, password_hash, role, created_at
 		FROM users
 		WHERE email = $1
 	`
 	var user User
 
-	err = conn.QueryRow(ctx, query, email).Scan(&user.Id, &user.Email, &user.PasswordHash, &user.Role)
+	err = conn.QueryRow(ctx, query, email).Scan(&user.Id, &user.Email, &user.PasswordHash, &user.Role, &user.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
 	}
